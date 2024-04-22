@@ -1,8 +1,11 @@
 package pl.adrianix2000.backend.Repositories;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.adrianix2000.backend.Models.DTO.UserRegistryRequest;
 import pl.adrianix2000.backend.Models.Entities.User;
+import pl.adrianix2000.backend.Models.Mappers.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +16,16 @@ public class InMemoryUserRespository {
 
     private List<User> users;
 
-    public InMemoryUserRespository() {
+    private final UserMapper userMapper;
+
+    @Autowired
+    public InMemoryUserRespository(UserMapper userMapper) {
         users = new ArrayList<>();
 
         users.add(new User(1, "Adrian", "Sak", "test1", "daudshlock@gmail.com"));
         users.add(new User(2, "Rafał", "Seredowski", "test2", "rafals123@gmail.com"));
+
+        this.userMapper = userMapper;
     }
 
 
@@ -33,14 +41,8 @@ public class InMemoryUserRespository {
 
     public boolean addUser(UserRegistryRequest user) {
 
-        User newUser = User.builder()
-                .id(users.size() + 1)
-                .first_name(user.getFirst_name())
-                .last_name(user.getLast_name())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .build();
-
+        User newUser = userMapper.UserRegistryRequestToUser(user);
+        newUser.setId(users.size() + 1);
 
         users.add(newUser);
 
