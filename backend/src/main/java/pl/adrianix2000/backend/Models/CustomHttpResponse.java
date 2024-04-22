@@ -13,4 +13,5 @@ import java.util.Optional;
 public class CustomHttpResponse {
     private HttpStatus status;
     private Optional<Object> body;
+
 }

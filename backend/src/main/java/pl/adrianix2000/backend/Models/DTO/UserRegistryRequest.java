@@ -5,6 +5,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @Data
+@Builder
 public class UserRegistryRequest {
     private String first_name;
     private String last_name;

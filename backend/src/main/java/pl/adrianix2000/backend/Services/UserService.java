@@ -8,6 +8,7 @@ import pl.adrianix2000.backend.Models.DTO.UserLoginRequest;
 import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
 import pl.adrianix2000.backend.Models.DTO.UserRegistryRequest;
 import pl.adrianix2000.backend.Models.Entities.User;
+import pl.adrianix2000.backend.Models.Mappers.UserMapper;
 import pl.adrianix2000.backend.Repositories.InMemoryUserRespository;
 
 import java.util.List;
@@ -41,17 +42,11 @@ public class UserService {
             User user = foundedUser.get();
 
             if(user.getPassword().equals(loginRequest.getPassword())) {
-
-                Optional<Object> responseBody = Optional.of(UserLoginResponse.builder()
-                        .first_name(user.getFirst_name())
-                        .last_name(user.getLast_name())
-                        .email(user.getEmail())
-                        .password(user.getPassword())
-                        .build());
+                UserLoginResponse response = UserMapper.INSTANCE.UserToUserLoginResponse(user);
 
                 return CustomHttpResponse.builder()
                         .status(HttpStatus.OK)
-                        .body(responseBody)
+                        .body(Optional.of(response))
                         .build();
             }
 
@@ -63,7 +58,7 @@ public class UserService {
 
         return CustomHttpResponse.builder()
                 .status(HttpStatus.NOT_FOUND)
-                .body(Optional.of("Nie ma tagiego użytkownika"))
+                .body(Optional.of("Nie ma takiego użytkownika"))
                 .build();
     }
 
