@@ -11,7 +11,6 @@ import java.util.Optional;
 @Builder
 @AllArgsConstructor
 public class CustomHttpResponse {
-    private String message;
     private HttpStatus status;
     private Optional<Object> body;
 }

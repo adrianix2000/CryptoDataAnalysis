@@ -24,13 +24,13 @@ public class UserService {
         if(foundedUser.isEmpty()) {
             respository.addUser(registryRequest);
             return CustomHttpResponse.builder()
-                    .message("Pomyślnie dodano nowego użytkownika")
+                    .body(Optional.of("Pomyślnie dodano nowego użytkownika"))
                     .status(HttpStatus.OK)
                     .build();
         }
 
         return CustomHttpResponse.builder()
-                .message("Użytkownik o podanym emailu istanieje")
+                .body(Optional.of("Użytkownik o podanym emailu istanieje"))
                 .status(HttpStatus.CONFLICT)
                 .build();
     }
@@ -50,21 +50,18 @@ public class UserService {
                         .build());
 
                 return CustomHttpResponse.builder()
-                        .message("Zalogowano użytkownika")
                         .status(HttpStatus.OK)
                         .body(responseBody)
                         .build();
             }
 
             return CustomHttpResponse.builder()
-                    .message("Niepoprawne hasło")
                     .status(HttpStatus.NOT_FOUND)
                     .body(Optional.of("Niepoprawne hasło"))
                     .build();
         }
 
         return CustomHttpResponse.builder()
-                .message("Nie ma tagiego użytkownika")
                 .status(HttpStatus.NOT_FOUND)
                 .body(Optional.of("Nie ma tagiego użytkownika"))
                 .build();

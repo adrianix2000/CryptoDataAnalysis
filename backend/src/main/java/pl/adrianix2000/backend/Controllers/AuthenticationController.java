@@ -24,9 +24,9 @@ public class AuthenticationController {
     private final UserService service;
 
     @PostMapping("/registry")
-    public ResponseEntity<String> registry(@RequestBody UserRegistryRequest request) {
+    public ResponseEntity<Object> registry(@RequestBody UserRegistryRequest request) {
         CustomHttpResponse response = service.addUser(request);
-        return ResponseEntity.status(response.getStatus()).body(response.getMessage());
+        return ResponseEntity.status(response.getStatus()).body(response.getBody().get());
     }
 
     @PostMapping("/login")
