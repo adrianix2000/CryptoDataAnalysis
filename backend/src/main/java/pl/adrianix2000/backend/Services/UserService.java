@@ -19,6 +19,7 @@ import java.util.Optional;
 public class UserService {
 
     private final InMemoryUserRespository respository;
+    private final UserMapper userMapper;
 
     public CustomHttpResponse addUser(UserRegistryRequest registryRequest) {
         Optional<User> foundedUser = respository.findUserByEmail(registryRequest.getEmail());
@@ -42,7 +43,7 @@ public class UserService {
             User user = foundedUser.get();
 
             if(user.getPassword().equals(loginRequest.getPassword())) {
-                UserLoginResponse response = UserMapper.INSTANCE.UserToUserLoginResponse(user);
+                UserLoginResponse response = userMapper.UserToUserLoginResponse(user);
 
                 return CustomHttpResponse.builder()
                         .status(HttpStatus.OK)
