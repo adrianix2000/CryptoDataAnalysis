@@ -7,4 +7,4 @@ The main function of this platform is to get and store data associated with cryp
 Currently we're working with deploying logic related with storing data about users and user authentication. For now, we've build very simple InMemoryUserRepository, in which we are storing data about users. We can simply test functionalities of our platform in the Postman. Ultimately, we are planning to build SQL database in PostgreSQL.
 
 ## Basic functionalities
-Along with creation new functionalities of our platform, we are going to describe them in a very transparent way, so every user could simply understand how this exactly works.
+Along with creation new functionalities of our platform, we are going to describe them in a very transparent way, so every user could simply understand how this exactly
