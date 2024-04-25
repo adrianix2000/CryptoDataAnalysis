@@ -20,6 +20,7 @@ public class UserService {
 
     private final InMemoryUserRespository respository;
     private final UserMapper userMapper;
+    private final JWTService jwtService;
 
     public CustomHttpResponse addUser(UserRegistryRequest registryRequest) {
         Optional<User> foundedUser = respository.findUserByEmail(registryRequest.getEmail());
@@ -44,6 +45,7 @@ public class UserService {
 
             if(user.getPassword().equals(loginRequest.getPassword())) {
                 UserLoginResponse response = userMapper.UserToUserLoginResponse(user);
+                response.setToken(jwtService.generateToken(user));
 
                 return CustomHttpResponse.builder()
                         .status(HttpStatus.OK)

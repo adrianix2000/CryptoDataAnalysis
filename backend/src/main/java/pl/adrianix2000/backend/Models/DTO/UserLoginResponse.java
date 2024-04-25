@@ -12,4 +12,5 @@ public class UserLoginResponse {
     private String last_name;
     private String password;
     private String email;
+    private String token;
 }
