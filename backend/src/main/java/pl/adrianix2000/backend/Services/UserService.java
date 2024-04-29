@@ -3,6 +3,7 @@ package pl.adrianix2000.backend.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.UserLoginRequest;
 import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
@@ -24,18 +25,17 @@ public class UserService {
 
     public CustomHttpResponse addUser(UserRegistryRequest registryRequest) {
         Optional<User> foundedUser = respository.findUserByEmail(registryRequest.getEmail());
-        if(foundedUser.isEmpty()) {
+
+        if (foundedUser.isEmpty()) {
             respository.addUser(registryRequest);
             return CustomHttpResponse.builder()
                     .body(Optional.of("Pomyślnie dodano nowego użytkownika"))
                     .status(HttpStatus.OK)
                     .build();
+        }else {
+            throw new ApplicationException("Użytkownik o podanym emailu istanieje", HttpStatus.CONFLICT);
         }
 
-        return CustomHttpResponse.builder()
-                .body(Optional.of("Użytkownik o podanym emailu istanieje"))
-                .status(HttpStatus.CONFLICT)
-                .build();
     }
 
     public CustomHttpResponse loginUser(UserLoginRequest loginRequest) {
@@ -51,18 +51,12 @@ public class UserService {
                         .status(HttpStatus.OK)
                         .body(Optional.of(response))
                         .build();
+            } else {
+                throw new ApplicationException("Niepoprawne hasło", HttpStatus.NOT_FOUND);
             }
-
-            return CustomHttpResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Optional.of("Niepoprawne hasło"))
-                    .build();
+        } else {
+            throw new ApplicationException("Nie ma takiego użytkownika", HttpStatus.NOT_FOUND);
         }
-
-        return CustomHttpResponse.builder()
-                .status(HttpStatus.NOT_FOUND)
-                .body(Optional.of("Nie ma takiego użytkownika"))
-                .build();
     }
 
     public List<User> getAllUsers() {

@@ -2,8 +2,10 @@ package pl.adrianix2000.backend.Services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.Date;
 
 import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.algorithms.Algorithm;
+import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
 import pl.adrianix2000.backend.Models.Entities.User;
 
@@ -53,7 +56,7 @@ public class JWTService {
         return  tokenBuilder.sign(Algorithm.HMAC256(PRIVATE_KEY));
     }
 
-    public Authentication verifyToken(String token) {
+    public Authentication verifyToken(String token) throws TokenExpiredException {
 
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(PRIVATE_KEY))
                 .build()
@@ -68,6 +71,7 @@ public class JWTService {
 
         return new UsernamePasswordAuthenticationToken(userLoginResponse,
                 null, Collections.emptyList());
+
     }
 
 
