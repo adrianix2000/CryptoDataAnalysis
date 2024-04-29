@@ -1,5 +1,6 @@
 package pl.adrianix2000.backend.Services;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -58,7 +59,7 @@ public class UserService {
 
     }
 
-    public CustomHttpResponse loginUser(UserLoginRequest loginRequest) {
+    public CustomHttpResponse loginUser(@Valid UserLoginRequest loginRequest) {
         Optional<User> foundedUser = repository.findByEmail(loginRequest.getEmail());
         if(foundedUser.isPresent()) {
             User user = foundedUser.get();

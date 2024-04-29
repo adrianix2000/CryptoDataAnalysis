@@ -1,6 +1,7 @@
 package pl.adrianix2000.backend.Models.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
