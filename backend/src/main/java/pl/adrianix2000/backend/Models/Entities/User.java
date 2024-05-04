@@ -3,6 +3,9 @@ package pl.adrianix2000.backend.Models.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +25,7 @@ public class User {
     private String password;
     @Column(name = "email")
     private String email;
+    @Column(name = "creation_date")
+    @CreationTimestamp
+    private Timestamp creation_date;
 }

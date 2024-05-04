@@ -22,8 +22,8 @@ public class InMemoryUserRespository {
     public InMemoryUserRespository(UserMapper userMapper) {
         users = new ArrayList<>();
 
-        users.add(new User(1, "Adrian", "Sak", "test1", "daudshlock@gmail.com"));
-        users.add(new User(2, "Rafał", "Seredowski", "test2", "rafals123@gmail.com"));
+//        users.add(new User(1, "Adrian", "Sak", "test1", "daudshlock@gmail.com"));
+//        users.add(new User(2, "Rafał", "Seredowski", "test2", "rafals123@gmail.com"));
 
         this.userMapper = userMapper;
     }
