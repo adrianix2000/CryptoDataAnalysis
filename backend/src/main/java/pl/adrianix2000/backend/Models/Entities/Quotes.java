@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -21,7 +22,7 @@ public class Quotes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "quote_date")
-    private Date dateTime;
+    private LocalDateTime dateTime;
     @Column(name = "high_price")
     private BigDecimal high_price;
     @Column(name = "low_price")

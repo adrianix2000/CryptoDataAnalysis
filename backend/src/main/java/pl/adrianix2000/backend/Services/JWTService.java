@@ -44,7 +44,7 @@ public class JWTService {
 
     public String generateToken(User user) {
 
-        Date expirationDate = calculateExpirationDate(1);
+        Date expirationDate = calculateExpirationDate(5);
 
         Builder tokenBuilder = JWT.create()
                 .withClaim("firstName", user.getFirst_name())

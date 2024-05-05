@@ -1,29 +1,37 @@
 package pl.adrianix2000.backend.Services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
+import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
 import pl.adrianix2000.backend.Models.Entities.Quotes;
 import pl.adrianix2000.backend.Repositories.CryptoCurrencyRepository;
+import pl.adrianix2000.backend.Repositories.QuotesRepository;
+import pl.adrianix2000.backend.Configuration.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CryptoCurrencyService {
 
     final private CryptoCurrencyRepository repository;
+    final private QuotesService quotesService;
 
-    public void updateCryptoHistoricalData(String cryptoCurrencyName) {
+    public CustomHttpResponse updateCryptoHistoricalData(String cryptoCurrencyName) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
 
         if(optionalCryptoCurrency.isEmpty()) {
@@ -32,33 +40,20 @@ public class CryptoCurrencyService {
 
 
         CryptoCurrency foundedCurrency = optionalCryptoCurrency.get();
-        Optional<Date> latestDate = foundedCurrency.getQuotes().stream()
-                .map(Quotes::getDateTime).min(Comparator.naturalOrder());
+        Optional<LocalDateTime> latestDate = foundedCurrency.getQuotes().stream()
+                .map(Quotes::getDateTime).max(Comparator.naturalOrder());
 
 
         if(latestDate.isPresent()) {
-            readQuotesFromCsvToDb(latestDate.get(), foundedCurrency.getName());
+            quotesService.readQuotesFromCsvToDb(latestDate.get(), foundedCurrency);
         } else {
-            readQuotesFromCsvToDb(null, foundedCurrency.getName());
+            quotesService.readQuotesFromCsvToDb(null, foundedCurrency);
         }
 
-    }
-
-
-    public void readQuotesFromCsvToDb(Date from, String cryptoName) {
-        String filePath = "coin_" + cryptoName.toLowerCase() + ".csv";
-        File file = new File(filePath);
-        try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            List<String> lines = bufferedReader.lines().skip(1).toList();
-        }catch (FileNotFoundException ex) {
-
-            throw new ApplicationException("Nie istnieje plik na serwerze zawierający dane historyczne dotyczące kryptowaluty o nazwie " + cryptoName,
-                    HttpStatus.NOT_FOUND);
-
-        }
+        return CustomHttpResponse.builder()
+                .body(Optional.of("Zaktualizowano historyczne dane rynkowe kryptowaluty " + cryptoCurrencyName))
+                .status(HttpStatus.OK)
+                .build();
     }
 
 }
