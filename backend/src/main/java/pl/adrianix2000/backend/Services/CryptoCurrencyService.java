@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
+import pl.adrianix2000.backend.Models.DTO.ExtremeHttpRequest;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
 import pl.adrianix2000.backend.Models.Entities.Quotes;
 import pl.adrianix2000.backend.Repositories.CryptoCurrencyRepository;
 import pl.adrianix2000.backend.Repositories.QuotesRepository;
 import pl.adrianix2000.backend.Configuration.*;
+import pl.adrianix2000.backend.Services.Analysis.ExtremeFinder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,16 +32,23 @@ public class CryptoCurrencyService {
 
     final private CryptoCurrencyRepository repository;
     final private QuotesService quotesService;
+    final private ExtremeFinder extremeFinder;
 
-    public CustomHttpResponse updateCryptoHistoricalData(String cryptoCurrencyName) {
+    private CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
 
         if(optionalCryptoCurrency.isEmpty()) {
             throw new ApplicationException("W systemie nie ma kryptowaluty o nazwie" + cryptoCurrencyName, HttpStatus.NOT_FOUND);
         }
 
+        return optionalCryptoCurrency.get();
+    }
 
-        CryptoCurrency foundedCurrency = optionalCryptoCurrency.get();
+
+    public CustomHttpResponse updateCryptoHistoricalData(String cryptoCurrencyName) {
+
+        CryptoCurrency foundedCurrency = getCryptoByName(cryptoCurrencyName);
+
         Optional<LocalDateTime> latestDate = foundedCurrency.getQuotes().stream()
                 .map(Quotes::getDateTime).max(Comparator.naturalOrder());
 
@@ -55,5 +64,16 @@ public class CryptoCurrencyService {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+
+    public List<String> getExtremes(ExtremeHttpRequest request) {
+        CryptoCurrency foundedCurrency = getCryptoByName(request.getCryptoCurrencyName());
+
+        List<Quotes> currencyQuotes = foundedCurrency.getQuotes();
+
+
+        return extremeFinder.findLocalMinima(currencyQuotes);
+    }
+
 
 }
