@@ -1,6 +1,8 @@
 package pl.adrianix2000.backend.Models.Entities;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +38,7 @@ public class Quotes {
     @Column(name = "marketcap")
     private BigDecimal marketcap;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cryptocurrency_id")
     private CryptoCurrency currency;
 }

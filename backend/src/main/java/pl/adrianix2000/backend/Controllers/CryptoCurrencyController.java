@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.ExtremeHttpRequest;
+import pl.adrianix2000.backend.Models.Entities.Quotes;
 import pl.adrianix2000.backend.Services.CryptoCurrencyService;
 
 import java.util.HashMap;
@@ -36,5 +37,22 @@ public class CryptoCurrencyController {
         extremums.put("Extremums", service.getExtremes(request));
 
         return ResponseEntity.ok(extremums);
+    }
+
+    @GetMapping("/getAllCryptoNames")
+    @CrossOrigin
+    public ResponseEntity<Map<String, List<String>>> getAvailableCryptoNames() {
+        Map<String, List<String>> result = new HashMap<>();
+        result.put("AvailableCryptoCurrencies", service.getAllCryptoNames());
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/quotes")
+    @CrossOrigin
+    public ResponseEntity<Map<String, List<Quotes>>> getCryptoQuotes(@RequestParam String cryptoName) {
+        List<Quotes> cryptoCurrencyQuotes = service.getAllCryptoHistoricalQuotes(cryptoName);
+        Map<String, List<Quotes>> result = new HashMap<>();
+        result.put("quotes", cryptoCurrencyQuotes);
+        return ResponseEntity.ok(result);
     }
 }

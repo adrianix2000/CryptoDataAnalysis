@@ -29,7 +29,7 @@ public class ApplicationSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((httpRequest) ->
-                        httpRequest.requestMatchers("/auth/*", "/users/*").permitAll()
+                        httpRequest.requestMatchers("/auth/*", "/users/*", "/currencies/*").permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(c -> c.disable())
                 .build();

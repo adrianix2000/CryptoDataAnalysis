@@ -44,6 +44,16 @@ public class CryptoCurrencyService {
         return optionalCryptoCurrency.get();
     }
 
+    public List<String> getAllCryptoNames() {
+        return repository.getAllCryptoNames();
+    }
+
+    public List<Quotes> getAllCryptoHistoricalQuotes(String cryptoName) {
+        CryptoCurrency foundedCurrency = getCryptoByName(cryptoName);
+
+        return quotesService.getAllCryptoQuotes(cryptoName);
+    }
+
 
     public CustomHttpResponse updateCryptoHistoricalData(String cryptoCurrencyName) {
 

@@ -1,5 +1,6 @@
 package pl.adrianix2000.backend.Models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class CryptoCurrency {
     private String name;
     @Column(name = "symbol")
     private String symbol;
+    @JsonIgnore
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
     private List<Quotes> quotes;
 }

@@ -54,6 +54,10 @@ public class QuotesService {
         }
     }
 
+    public List<Quotes> getAllCryptoQuotes(String cryptoName) {
+        return quotesRepository.findByCurrencyName(cryptoName);
+    }
+
     public Quotes convertLineToQuotes(String fileLine, CryptoCurrency cryptoCurrency) {
         String[] splitted = fileLine.split(",");
 
