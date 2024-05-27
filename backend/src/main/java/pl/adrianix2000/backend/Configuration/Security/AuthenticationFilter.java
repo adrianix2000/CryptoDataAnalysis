@@ -33,7 +33,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
-        log.info(authorizationHeader);
 
         if(authorizationHeader != null) {
             if(authorizationHeader.startsWith("Bearer ")) {

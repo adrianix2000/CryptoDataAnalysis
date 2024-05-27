@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.ExtremeHttpRequest;
@@ -74,8 +75,6 @@ public class CryptoCurrencyService {
                 .status(HttpStatus.OK)
                 .build();
     }
-
-
     public List<String> getExtremes(ExtremeHttpRequest request) {
         CryptoCurrency foundedCurrency = getCryptoByName(request.getCryptoCurrencyName());
 

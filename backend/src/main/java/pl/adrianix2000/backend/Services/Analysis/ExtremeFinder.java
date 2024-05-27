@@ -6,6 +6,9 @@ import pl.adrianix2000.backend.Models.Entities.Quotes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -55,39 +58,92 @@ public class ExtremeFinder {
         return result;
     }
 */
-public List<String> findLocalMinima(List<Quotes> quotes) {
-    int windowSize = 7;
-    List<String> result = new ArrayList<>();
+//public List<String> findLocalMinima(List<Quotes> quotes) {
+//    int windowSize = 7;
+//    List<String> result = new ArrayList<>();
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+//
+//    Quotes startOfKrach = null;
+//
+//    quotes = quotes.stream()
+//            .filter(q -> {
+//                BigDecimal closePrice = q.getClose_price();
+//                BigDecimal openPrice = q.getOpen_price();
+//                BigDecimal priceDifference = closePrice.subtract(openPrice).abs();
+//                BigDecimal priceChangePercentage = priceDifference
+//                        .divide(openPrice, RoundingMode.HALF_UP)
+//                        .multiply(new BigDecimal(100));
+//                return priceChangePercentage.compareTo(new BigDecimal(0.1)) > 0;
+//            })
+//            .toList();
+//
+//
+//    for (int i = windowSize; i < quotes.size()-1; i++) {
+//        Quotes currentQuote = quotes.get(i);
+//
+//        BigDecimal average = calculateMovingAverage(quotes, i - windowSize, i);
+//
+//        if (isLocalMinima(quotes, i, windowSize, average)) {
+//
+//            if (!result.isEmpty()) {
+//
+//                if(!isLocalMinima(quotes, i+1, windowSize, average)) {
+//
+//                    if (startOfKrach.getOpen_price().subtract(quotes.get(i).getClose_price())
+//                            .divide(startOfKrach.getOpen_price(), RoundingMode.HALF_UP)
+//                            .multiply(new BigDecimal(100.0))
+//                            .compareTo(new BigDecimal(15.0)) < 0) {
+//                        result.add(currentQuote.getDateTime().toString());
+//
+//                    }
+//
+//                }
+//            } else {
+//                result.add(currentQuote.getDateTime().toString());
+//            }
+//        } else {
+//            if (isLocalMinima(quotes, i+1, windowSize, average)) {
+//                startOfKrach = quotes.get(i+1);
+//            }
+//        }
+//    }
+//
+//    return result;
+//}
 
-    for (int i = windowSize; i < quotes.size(); i++) {
-        Quotes currentQuote = quotes.get(i);
+    public List<String> findLocalMinima(List<Quotes> quotes) {
+        int windowSize = 12; // Rozmiar okna czasowego do sprawdzania minimów
+        List<String> result = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-        BigDecimal average = calculateMovingAverage(quotes, i - windowSize, i);
+        for (int i = windowSize; i < quotes.size() - windowSize; i++) {
+            Quotes currentQuote = quotes.get(i);
+            BigDecimal average = calculateMovingAverage(quotes, i - windowSize, i + windowSize);
 
-        if (isLocalMinima(quotes, i, windowSize, average)) {
-            result.add(currentQuote.getDateTime().toString());
+            if (isLocalMinima(quotes, i, windowSize, average)) {
+                result.add(currentQuote.getDateTime().toString());
+            }
         }
-    }
 
-    return result;
-}
+        return result;
+    }
 
     private BigDecimal calculateMovingAverage(List<Quotes> quotes, int start, int end) {
         BigDecimal sum = BigDecimal.ZERO;
-        for (int i = start; i < end; i++) {
+        for (int i = start; i <= end && i < quotes.size(); i++) {
             sum = sum.add(quotes.get(i).getClose_price());
         }
-        return sum.divide(BigDecimal.valueOf(end - start), 2, RoundingMode.HALF_UP);
+        return sum.divide(BigDecimal.valueOf(end - start + 1), 2, RoundingMode.HALF_UP);
     }
 
     private boolean isLocalMinima(List<Quotes> quotes, int currentIndex, int windowSize, BigDecimal average) {
         Quotes currentQuote = quotes.get(currentIndex);
         BigDecimal currentPrice = currentQuote.getClose_price();
 
-
         if (currentPrice.compareTo(average) < 0) {
-            for (int i = currentIndex - windowSize + 1; i < currentIndex; i++) {
-                if (quotes.get(i).getClose_price().compareTo(currentPrice) <= 0) {
+            // Sprawdzanie czy aktualna cena jest mniejsza od cen w oknie przed i po aktualnym punkcie
+            for (int i = currentIndex - windowSize; i < currentIndex + windowSize && i < quotes.size(); i++) {
+                if (i != currentIndex && quotes.get(i).getClose_price().compareTo(currentPrice) <= 0) {
                     return false;
                 }
             }
@@ -95,4 +151,20 @@ public List<String> findLocalMinima(List<Quotes> quotes) {
         }
         return false;
     }
+
+    private boolean isLocalMaxima(List<Quotes> quotes, int currentIndex, int windowSize, BigDecimal average) {
+        Quotes currentQuote = quotes.get(currentIndex);
+        BigDecimal currentPrice = currentQuote.getClose_price();
+
+        if (currentPrice.compareTo(average) > 0) {
+            for (int i = currentIndex - windowSize; i < currentIndex + windowSize && i < quotes.size(); i++) {
+                if (i != currentIndex && quotes.get(i).getClose_price().compareTo(currentPrice) >= 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

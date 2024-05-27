@@ -29,9 +29,8 @@ public class CryptoCurrencyController {
         return ResponseEntity.status(response.getStatus()).body(response.getBody().get());
     }
 
-    @GetMapping("/getExtremes")
+    @PostMapping("/getExtremes")
     public ResponseEntity<Object> getExtremum(@RequestBody ExtremeHttpRequest request) {
-
 
         Map<String, List<String>> extremums = new HashMap<>();
         extremums.put("Extremums", service.getExtremes(request));
@@ -40,7 +39,6 @@ public class CryptoCurrencyController {
     }
 
     @GetMapping("/getAllCryptoNames")
-    @CrossOrigin
     public ResponseEntity<Map<String, List<String>>> getAvailableCryptoNames() {
         Map<String, List<String>> result = new HashMap<>();
         result.put("AvailableCryptoCurrencies", service.getAllCryptoNames());
@@ -48,7 +46,6 @@ public class CryptoCurrencyController {
     }
 
     @GetMapping("/quotes")
-    @CrossOrigin
     public ResponseEntity<Map<String, List<Quotes>>> getCryptoQuotes(@RequestParam String cryptoName) {
         List<Quotes> cryptoCurrencyQuotes = service.getAllCryptoHistoricalQuotes(cryptoName);
         Map<String, List<Quotes>> result = new HashMap<>();

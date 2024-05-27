@@ -50,11 +50,11 @@ public class UserService {
 
             repository.save(newUser);
             return CustomHttpResponse.builder()
-                    .body(Optional.of("Pomyślnie dodano nowego użytkownika"))
+                    .body(Optional.of("Successfully added a new user"))
                     .status(HttpStatus.OK)
                     .build();
         }else {
-            throw new ApplicationException("Użytkownik o podanym emailu istanieje", HttpStatus.CONFLICT);
+            throw new ApplicationException("A user with the given email already exists", HttpStatus.CONFLICT);
         }
 
     }
@@ -73,10 +73,10 @@ public class UserService {
                         .body(Optional.of(response))
                         .build();
             } else {
-                throw new ApplicationException("Niepoprawne hasło", HttpStatus.NOT_FOUND);
+                throw new ApplicationException("Incorrect password", HttpStatus.NOT_FOUND);
             }
         } else {
-            throw new ApplicationException("Nie ma takiego użytkownika", HttpStatus.NOT_FOUND);
+            throw new ApplicationException("No such user exists", HttpStatus.NOT_FOUND);
         }
     }
 
