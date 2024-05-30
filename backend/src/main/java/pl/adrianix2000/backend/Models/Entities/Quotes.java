@@ -2,6 +2,7 @@ package pl.adrianix2000.backend.Models.Entities;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class Quotes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "quote_date")
     private LocalDateTime dateTime;
     @Column(name = "high_price")

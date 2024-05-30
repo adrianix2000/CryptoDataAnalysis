@@ -35,7 +35,7 @@ public class CryptoCurrencyService {
     final private QuotesService quotesService;
     final private ExtremeFinder extremeFinder;
 
-    private CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
+    public CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
 
         if(optionalCryptoCurrency.isEmpty()) {

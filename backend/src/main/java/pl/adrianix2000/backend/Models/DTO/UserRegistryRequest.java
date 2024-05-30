@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
 public class UserRegistryRequest {
     @NotBlank(message = "Imię nie może być puste")
     @Size(max = 60, message = "Imię może zawierać maksymalnie 60 znaków")

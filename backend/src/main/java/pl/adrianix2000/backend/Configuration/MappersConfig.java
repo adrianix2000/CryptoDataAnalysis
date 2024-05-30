@@ -1,5 +1,7 @@
 package pl.adrianix2000.backend.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.adrianix2000.backend.Models.Mappers.UserMapper;
@@ -9,6 +11,13 @@ public class MappersConfig {
     @Bean
     public UserMapper createUserMapper() {
         return UserMapper.INSTANCE;
+    }
+
+    @Bean
+    public ObjectMapper getMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 
 }
