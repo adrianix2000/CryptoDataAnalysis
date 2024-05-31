@@ -35,14 +35,24 @@ public class CryptoCurrencyService {
     final private QuotesService quotesService;
     final private ExtremeFinder extremeFinder;
 
-    public CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
-        Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
-
+    private CryptoCurrency extractCryptoFromOptional(Optional<CryptoCurrency> optionalCryptoCurrency, String errorCommunicate) {
         if(optionalCryptoCurrency.isEmpty()) {
-            throw new ApplicationException("W systemie nie ma kryptowaluty o nazwie" + cryptoCurrencyName, HttpStatus.NOT_FOUND);
+            throw new ApplicationException(errorCommunicate, HttpStatus.NOT_FOUND);
         }
 
         return optionalCryptoCurrency.get();
+    }
+
+    public CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
+        Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
+        return extractCryptoFromOptional(optionalCryptoCurrency,
+                "W systemie nie ma kryptowaluty o nazwie" + cryptoCurrencyName);
+    }
+
+    public CryptoCurrency getCryptoBySymbol(String cryptoCurrencySymbol) {
+        Optional<CryptoCurrency> optionalCryptoCurrency = repository.findBySymbol(cryptoCurrencySymbol.toUpperCase());
+        return extractCryptoFromOptional(optionalCryptoCurrency,
+                "W systemie nie ma kryptowaluty z symbolem: " + cryptoCurrencySymbol);
     }
 
     public List<String> getAllCryptoNames() {

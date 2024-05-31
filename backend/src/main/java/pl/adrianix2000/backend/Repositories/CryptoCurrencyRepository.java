@@ -16,4 +16,6 @@ public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, 
 
     @Query("SELECT c.name FROM CryptoCurrency c")
     List<String> getAllCryptoNames();
+
+    Optional<CryptoCurrency> findBySymbol(String symbol);
 }
