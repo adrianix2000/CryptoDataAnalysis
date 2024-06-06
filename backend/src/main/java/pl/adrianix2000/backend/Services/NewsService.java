@@ -62,7 +62,7 @@ public class NewsService {
                     .build());
         }
 
-        summaries.sort(Comparator.comparing(QuoteChanges::getDayDifference));
+        summaries.sort(Comparator.comparing(QuoteChanges::getDayDifference).reversed());
         return summaries.stream().limit(howMany).toList();
     }
 
