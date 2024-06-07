@@ -1,8 +1,11 @@
 package pl.adrianix2000.backend.Services;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
 import pl.adrianix2000.backend.Models.Entities.CryptoPost;
@@ -10,19 +13,24 @@ import pl.adrianix2000.backend.Models.Entities.PostCategory;
 import pl.adrianix2000.backend.Repositories.CryptoPostRepository;
 
 import javax.swing.text.DateFormatter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import org.w3c.dom.*;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CryptoPostService {
     final String filePath = "/home/rafal/Pulpit/6 semestr/crypto/CryptoDataAnalysis/backend/src/main/resources/Data/Posts/data.tsv";
+    final String xmlFilePath = "/home/rafal/Pobrane/data.xml";
+
     final CryptoCurrencyService cryptoCurrencyService;
     final CryptoPostRepository repository;
 
@@ -45,6 +53,69 @@ public class CryptoPostService {
         }
         return allPosts;
     }
+
+    public List<CryptoPost> readAllPostsFromXML() {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+        List<CryptoPost> result = new ArrayList<>();
+        try {
+            DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
+            File file = new File(xmlFilePath);
+
+            //    <date>2018-03-06T00:00:00+00:00</date>
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            try {
+                Document document = builder.parse(file);
+
+                Element root = document.getDocumentElement();
+                NodeList nodes = root.getElementsByTagName("Post");
+
+                log.info("Number of posts: " + nodes.getLength());
+
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Element postElement = (Element) nodes.item(i);
+
+                    CryptoCurrency cryptoCurrency = cryptoCurrencyService.getCryptoBySymbol(
+                            getElementTextContent(postElement, "cryptoCurrency")
+                                    .toUpperCase());
+
+                    String stringData = getElementTextContent(postElement, "date");
+
+                    CryptoPost cryptoPost = CryptoPost.builder()
+                            .date(LocalDate.parse(stringData.split("T")[0], formatter))
+                            .title(getElementTextContent(postElement, "title"))
+                            .cryptoCurrency(cryptoCurrency)
+                            .isPositive(Boolean.parseBoolean(getElementTextContent(postElement, "isPositive")))
+                            .category(PostCategory.valueOf(getElementTextContent(postElement, "category")))
+                            .link(getElementTextContent(postElement, "link"))
+                            .build();
+
+                    result.add(cryptoPost);
+                }
+
+            } catch (SAXException saxException) {
+                throw new ApplicationException("SAX EXCEPTION", HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (FileNotFoundException fileNotFoundException) {
+                throw new ApplicationException("File could not be found", HttpStatus.NO_CONTENT);
+            } catch (IOException ioException) {
+                throw new ApplicationException("IO exception", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (ParserConfigurationException ex) {
+            throw new ApplicationException("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return result;
+    }
+
+    private String getElementTextContent(Element parentElement, String tagName) {
+        NodeList nodeList = parentElement.getElementsByTagName(tagName);
+        if (nodeList.getLength() > 0) {
+            return nodeList.item(0).getTextContent();
+        }
+        return null;
+    }
+
 
     public List<CryptoPost> getPostForCrypto(String cryptoCurrencyName) {
         CryptoCurrency crypto = cryptoCurrencyService.getCryptoByName(cryptoCurrencyName);

@@ -21,7 +21,7 @@ public class CryptoPostController {
 
     @GetMapping("/allPosts")
     public ResponseEntity<List<CryptoPost>> getAllPosts() {
-        return ResponseEntity.ok(service.readAllPostsFromFile());
+        return ResponseEntity.ok(service.readAllPostsFromXML());
     }
 
     @PostMapping("/updatePosts")
@@ -35,5 +35,10 @@ public class CryptoPostController {
         Map<String, List<CryptoPost>> result = new HashMap<>();
         result.put("posts", posts);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/test")
+    public void test() {
+        service.readAllPostsFromXML();
     }
 }
