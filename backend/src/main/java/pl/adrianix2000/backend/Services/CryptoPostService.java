@@ -7,9 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
+import pl.adrianix2000.backend.Models.CustomHttpResponse;
+import pl.adrianix2000.backend.Models.DTO.AddCryptoPostsRequest;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
 import pl.adrianix2000.backend.Models.Entities.CryptoPost;
 import pl.adrianix2000.backend.Models.Entities.PostCategory;
+import pl.adrianix2000.backend.Models.Mappers.CryptoPostMapper;
 import pl.adrianix2000.backend.Repositories.CryptoPostRepository;
 
 import javax.swing.text.DateFormatter;
@@ -34,6 +37,8 @@ public class CryptoPostService {
     final CryptoCurrencyService cryptoCurrencyService;
     final CryptoPostRepository repository;
 
+    private final CryptoPostMapper mapper;
+
     public void writeAllPostFromFileToDb() {
         List<CryptoPost> allPosts = readAllPostsFromFile();
 
@@ -54,6 +59,21 @@ public class CryptoPostService {
         return allPosts;
     }
 
+    public List<CryptoPost> getAllCryptoPosts() {
+        return repository.findAll();
+    }
+
+    public CustomHttpResponse addCryptoPost(AddCryptoPostsRequest request) {
+        CryptoCurrency cryptoCurrency = cryptoCurrencyService.getCryptoByName(request.getCryptoName());
+        CryptoPost newPost = mapper.AddCryptoPostsRequestToCryptoPost(request);
+        newPost.setCryptoCurrency(cryptoCurrency);
+        repository.save(newPost);
+
+        return CustomHttpResponse.builder()
+                .body(Optional.of("New crypto post was added to db"))
+                .status(HttpStatus.OK)
+                .build();
+    }
     public List<CryptoPost> readAllPostsFromXML() {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 

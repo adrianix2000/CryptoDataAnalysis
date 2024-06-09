@@ -11,6 +11,7 @@ import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.UserLoginRequest;
 import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
 import pl.adrianix2000.backend.Models.DTO.UserRegistryRequest;
+import pl.adrianix2000.backend.Models.Entities.Role;
 import pl.adrianix2000.backend.Models.Entities.User;
 import pl.adrianix2000.backend.Models.Mappers.UserMapper;
 import pl.adrianix2000.backend.Repositories.InMemoryUserRespository;
@@ -37,6 +38,7 @@ public class UserService {
 
             User newUser = userMapper.UserRegistryRequestToUser(registryRequest);
             newUser.setPassword(passwordEncoder.encode(registryRequest.getPassword()));
+            newUser.setRole(Role.USER);
 
 //            User newUser = User.builder()
 //

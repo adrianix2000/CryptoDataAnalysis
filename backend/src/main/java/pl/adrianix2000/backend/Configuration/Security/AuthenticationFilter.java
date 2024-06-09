@@ -33,7 +33,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
+        String requestURI = request.getRequestURI();
 
+        log.info(requestURI);
         if(authorizationHeader != null) {
             if(authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring(6).trim();
@@ -41,8 +43,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 log.info(token);
 
                 try {
-                    SecurityContextHolder.getContext().setAuthentication(
-                            jwtService.verifyToken(token));
+                    if(!requestURI.equals("/cryptoPosts/addPost")) {
+                        SecurityContextHolder.getContext().setAuthentication(
+                                jwtService.verifyToken(token));
+                    } else {
+                        if(jwtService.getClaimFromToken(token, "role").equals("ADMIN")) {
+                            SecurityContextHolder.getContext().setAuthentication(
+                                    jwtService.verifyToken(token));
+                        }
+                    }
                 }
                 catch (TokenExpiredException ex) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());

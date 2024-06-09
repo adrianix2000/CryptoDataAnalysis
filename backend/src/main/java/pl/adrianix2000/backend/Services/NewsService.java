@@ -27,7 +27,7 @@ public class NewsService {
 
         List<QuoteChanges> summaries = new ArrayList<>();
 
-        MathContext mc = new MathContext(8); // Ustal precyzję obliczeń
+        MathContext mc = new MathContext(8);
 
         for (int i = 0; i < cryptoQuotes.size() - 8; i++) {
             BigDecimal openPrice = cryptoQuotes.get(i).getOpen_price();

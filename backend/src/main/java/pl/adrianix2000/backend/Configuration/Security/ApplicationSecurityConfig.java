@@ -36,7 +36,7 @@ public class ApplicationSecurityConfig {
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(c -> c.configurationSource(configureCors()))
                 .authorizeHttpRequests((httpRequest) ->
-                        httpRequest.requestMatchers("/auth/*", "/users/*", "/news/*", "cryptoPosts/*").permitAll()
+                        httpRequest.requestMatchers("/auth/*", "/users/*", "/news/*").permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(c -> c.disable())
                 .build();

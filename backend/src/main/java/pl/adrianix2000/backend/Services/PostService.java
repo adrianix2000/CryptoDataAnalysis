@@ -44,10 +44,8 @@ public class PostService {
                 .filter(e -> quotesDates.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        // Definicja formatu daty
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        // TreeMap z niestandardowym komparatorem do sortowania według dat
         Map<String, List<String>> sortedNews = new TreeMap<>(new Comparator<String>() {
             @Override
             public int compare(String date1, String date2) {
@@ -58,8 +56,6 @@ public class PostService {
                 }
             }
         });
-
-        // Dodanie wszystkich elementów do posortowanej mapy
         sortedNews.putAll(filteredNews);
 
         return sortedNews;

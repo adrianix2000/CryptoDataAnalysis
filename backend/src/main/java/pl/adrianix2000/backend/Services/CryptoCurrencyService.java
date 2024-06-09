@@ -46,13 +46,13 @@ public class CryptoCurrencyService {
     public CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
         return extractCryptoFromOptional(optionalCryptoCurrency,
-                "W systemie nie ma kryptowaluty o nazwie" + cryptoCurrencyName);
+                "There is no cryptocurrency in the system named " + cryptoCurrencyName);
     }
 
     public CryptoCurrency getCryptoBySymbol(String cryptoCurrencySymbol) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findBySymbol(cryptoCurrencySymbol.toUpperCase());
         return extractCryptoFromOptional(optionalCryptoCurrency,
-                "W systemie nie ma kryptowaluty z symbolem: " + cryptoCurrencySymbol);
+                "There is no cryptocurrency in the system with symbol: " + cryptoCurrencySymbol);
     }
 
     public List<String> getAllCryptoNames() {
@@ -81,7 +81,7 @@ public class CryptoCurrencyService {
         }
 
         return CustomHttpResponse.builder()
-                .body(Optional.of("Zaktualizowano historyczne dane rynkowe kryptowaluty " + cryptoCurrencyName))
+                .body(Optional.of("Historical market data updated of cryptocurrency " + cryptoCurrencyName))
                 .status(HttpStatus.OK)
                 .build();
     }

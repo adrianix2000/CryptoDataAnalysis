@@ -43,13 +43,13 @@ public class QuotesService {
             lines = from == null ? lines : lines.stream().filter(l -> l.getDateTime().isAfter(from)).toList();
 
 
-            if(lines.isEmpty()) throw new ApplicationException("Wszystkie dane w bazie są aktualne.", HttpStatus.OK);
+            if(lines.isEmpty()) throw new ApplicationException("All data in the database are up to date.", HttpStatus.OK);
 
             lines.forEach(line -> quotesRepository.save(line));
 
         }catch (FileNotFoundException ex) {
 
-            throw new ApplicationException("Nie istnieje plik na serwerze zawierający dane historyczne dotyczące kryptowaluty o nazwie " +
+            throw new ApplicationException("There is no file on the server containing historical data for the cryptocurrency named " +
                     cryptoCurrency.getName(),
                     HttpStatus.NOT_FOUND);
         }
@@ -63,11 +63,11 @@ public class QuotesService {
         String[] splitted = fileLine.split(",");
 
         if(Arrays.stream(splitted).anyMatch(s -> s.trim().equals("null"))) {
-            throw new ApplicationException("Brak danych w pliku", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new ApplicationException("No date in the file", HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         if(splitted.length != 10)
-            throw new ApplicationException("Nie poprawny format pliku", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new ApplicationException("Invalid file format", HttpStatus.UNPROCESSABLE_ENTITY);
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Quotes convertedLine = Quotes.builder()

@@ -28,4 +28,7 @@ public class User {
     @Column(name = "creation_date")
     @CreationTimestamp
     private Timestamp creation_date;
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

@@ -50,6 +50,7 @@ public class JWTService {
                 .withClaim("firstName", user.getFirst_name())
                 .withClaim("lastName", user.getLast_name())
                 .withClaim("email", user.getEmail())
+                .withClaim("role", user.getRole().toString())
                 .withExpiresAt(expirationDate)
                 .withIssuedAt(Date.from(Instant.now()));
 
@@ -72,6 +73,11 @@ public class JWTService {
         return new UsernamePasswordAuthenticationToken(userLoginResponse,
                 null, Collections.emptyList());
 
+    }
+
+    public String getClaimFromToken(String token, String claimName) {
+        DecodedJWT decodedJWT = JWT.decode(token);
+        return decodedJWT.getClaim(claimName).asString();
     }
 
 
