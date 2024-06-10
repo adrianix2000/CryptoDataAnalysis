@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.SAXException;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
@@ -32,19 +33,20 @@ import org.w3c.dom.*;
 @Slf4j
 public class CryptoPostService {
     final String filePath = "/home/rafal/Pulpit/6 semestr/crypto/CryptoDataAnalysis/backend/src/main/resources/Data/Posts/data.tsv";
-    final String xmlFilePath = "/home/rafal/Pobrane/data.xml";
+    final String xmlFilePath = "/home/rafal/Pobrane/data1.xml";
 
     final CryptoCurrencyService cryptoCurrencyService;
     final CryptoPostRepository repository;
 
     private final CryptoPostMapper mapper;
 
+    @Transactional
     public void writeAllPostFromFileToDb() {
-        List<CryptoPost> allPosts = readAllPostsFromFile();
-
-        allPosts.forEach(p -> repository.save(p));
+        List<CryptoPost> allPosts = readAllPostsFromXML();
+        repository.saveAll(allPosts);
     }
 
+    @Transactional(readOnly = true)
     public List<CryptoPost> readAllPostsFromFile() {
         File file = new File(filePath);
         List<CryptoPost> allPosts = new ArrayList<>();
@@ -59,10 +61,12 @@ public class CryptoPostService {
         return allPosts;
     }
 
+    @Transactional(readOnly = true)
     public List<CryptoPost> getAllCryptoPosts() {
         return repository.findAll();
     }
 
+    @Transactional
     public CustomHttpResponse addCryptoPost(AddCryptoPostsRequest request) {
         CryptoCurrency cryptoCurrency = cryptoCurrencyService.getCryptoByName(request.getCryptoName());
         CryptoPost newPost = mapper.AddCryptoPostsRequestToCryptoPost(request);

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.UserLoginRequest;
@@ -31,6 +32,7 @@ public class UserService {
     private final UserRepository repository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Transactional
     public CustomHttpResponse addUser(UserRegistryRequest registryRequest) {
         Optional<User> foundedUser = repository.findByEmail(registryRequest.getEmail());
 
@@ -61,6 +63,7 @@ public class UserService {
 
     }
 
+    @Transactional(readOnly = true)
     public CustomHttpResponse loginUser(@Valid UserLoginRequest loginRequest) {
         Optional<User> foundedUser = repository.findByEmail(loginRequest.getEmail());
         if(foundedUser.isPresent()) {
@@ -82,6 +85,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return repository.findAll();
     }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.adrianix2000.backend.Configuration.ResourcesLocalization;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
@@ -27,6 +28,7 @@ public class QuotesService {
 
     final private QuotesRepository quotesRepository;
 
+    @Transactional
     public void readQuotesFromCsvToDb(LocalDateTime from, CryptoCurrency cryptoCurrency) {
        /* String filePath = ResourcesLocalization.MAIN_RESOURCE_DIRECTORY +
                 ResourcesLocalization.CRYPTO_DATA_RESOURCE_DIRECTORY +
@@ -45,7 +47,7 @@ public class QuotesService {
 
             if(lines.isEmpty()) throw new ApplicationException("All data in the database are up to date.", HttpStatus.OK);
 
-            lines.forEach(line -> quotesRepository.save(line));
+            quotesRepository.saveAll(lines);
 
         }catch (FileNotFoundException ex) {
 
@@ -55,6 +57,7 @@ public class QuotesService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Quotes> getAllCryptoQuotes(String cryptoName) {
         return quotesRepository.findByCurrencyName(cryptoName);
     }

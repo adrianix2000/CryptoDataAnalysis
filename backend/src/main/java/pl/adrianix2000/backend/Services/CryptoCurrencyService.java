@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
@@ -43,22 +44,26 @@ public class CryptoCurrencyService {
         return optionalCryptoCurrency.get();
     }
 
+    @Transactional(readOnly = true)
     public CryptoCurrency getCryptoByName(String cryptoCurrencyName) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findByName(cryptoCurrencyName);
         return extractCryptoFromOptional(optionalCryptoCurrency,
                 "There is no cryptocurrency in the system named " + cryptoCurrencyName);
     }
 
+    @Transactional(readOnly = true)
     public CryptoCurrency getCryptoBySymbol(String cryptoCurrencySymbol) {
         Optional<CryptoCurrency> optionalCryptoCurrency = repository.findBySymbol(cryptoCurrencySymbol.toUpperCase());
         return extractCryptoFromOptional(optionalCryptoCurrency,
                 "There is no cryptocurrency in the system with symbol: " + cryptoCurrencySymbol);
     }
 
+    @Transactional(readOnly = true)
     public List<String> getAllCryptoNames() {
         return repository.getAllCryptoNames();
     }
 
+    @Transactional(readOnly = true)
     public List<Quotes> getAllCryptoHistoricalQuotes(String cryptoName) {
         CryptoCurrency foundedCurrency = getCryptoByName(cryptoName);
 
@@ -66,6 +71,7 @@ public class CryptoCurrencyService {
     }
 
 
+    @Transactional
     public CustomHttpResponse updateCryptoHistoricalData(String cryptoCurrencyName) {
 
         CryptoCurrency foundedCurrency = getCryptoByName(cryptoCurrencyName);
@@ -85,6 +91,7 @@ public class CryptoCurrencyService {
                 .status(HttpStatus.OK)
                 .build();
     }
+    @Transactional(readOnly = true)
     public List<String> getExtremes(ExtremeHttpRequest request) {
         CryptoCurrency foundedCurrency = getCryptoByName(request.getCryptoCurrencyName());
 

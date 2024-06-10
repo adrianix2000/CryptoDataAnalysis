@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Deprecated
 public class InMemoryUserRespository {
 
     private List<User> users;
