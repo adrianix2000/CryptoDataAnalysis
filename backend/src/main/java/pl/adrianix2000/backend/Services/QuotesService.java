@@ -30,13 +30,12 @@ public class QuotesService {
 
     @Transactional
     public void readQuotesFromCsvToDb(LocalDateTime from, CryptoCurrency cryptoCurrency) {
-       /* String filePath = ResourcesLocalization.MAIN_RESOURCE_DIRECTORY +
+        String filePath = ResourcesLocalization.MAIN_RESOURCE_DIRECTORY +
                 ResourcesLocalization.CRYPTO_DATA_RESOURCE_DIRECTORY +
                 "coin_" + cryptoCurrency.getName().toLowerCase() + ".csv";
-*/
-        String filePath = "/home/rafal/Pulpit/daneAnaliza/02-06/archive(13)/ltc.csv";
 
         File file = new File(filePath);
+        log.info(filePath);
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

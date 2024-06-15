@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Deprecated
 public class PostService {
 
     private final String filePath = "/home/rafal/Pulpit/daneAnaliza/DATASET_NEW/BTC.csv";

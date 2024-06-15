@@ -15,7 +15,6 @@ import pl.adrianix2000.backend.Models.DTO.UserRegistryRequest;
 import pl.adrianix2000.backend.Models.Entities.Role;
 import pl.adrianix2000.backend.Models.Entities.User;
 import pl.adrianix2000.backend.Models.Mappers.UserMapper;
-import pl.adrianix2000.backend.Repositories.InMemoryUserRespository;
 import pl.adrianix2000.backend.Repositories.UserRepository;
 
 import java.util.List;

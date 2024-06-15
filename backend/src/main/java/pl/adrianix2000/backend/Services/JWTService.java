@@ -1,36 +1,29 @@
 package pl.adrianix2000.backend.Services;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
+import pl.adrianix2000.backend.Models.Entities.User;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import com.auth0.jwt.JWTCreator.Builder;
-import com.auth0.jwt.algorithms.Algorithm;
-import pl.adrianix2000.backend.Exceptions.ApplicationException;
-import pl.adrianix2000.backend.Models.DTO.UserLoginResponse;
-import pl.adrianix2000.backend.Models.Entities.User;
-
 @Service
 @Slf4j
 public class JWTService {
 
-    private String PRIVATE_KEY = "ALAMAKOTA";
+    @Value("${security.keys.private_key}")
+    private String PRIVATE_KEY;
 
 
     private Date calculateExpirationDate(int minutes) {

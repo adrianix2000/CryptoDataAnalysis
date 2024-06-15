@@ -1,6 +1,5 @@
 package pl.adrianix2000.backend.Repositories;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.adrianix2000.backend.Models.DTO.UserRegistryRequest;

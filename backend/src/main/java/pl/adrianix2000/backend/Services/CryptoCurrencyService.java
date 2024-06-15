@@ -2,30 +2,21 @@ package pl.adrianix2000.backend.Services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
 import pl.adrianix2000.backend.Models.DTO.ExtremeHttpRequest;
 import pl.adrianix2000.backend.Models.Entities.CryptoCurrency;
 import pl.adrianix2000.backend.Models.Entities.Quotes;
 import pl.adrianix2000.backend.Repositories.CryptoCurrencyRepository;
-import pl.adrianix2000.backend.Repositories.QuotesRepository;
-import pl.adrianix2000.backend.Configuration.*;
 import pl.adrianix2000.backend.Services.Analysis.ExtremeFinder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

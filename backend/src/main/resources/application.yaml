@@ -6,3 +6,6 @@ spring:
     driver-class: "org.mysql.Driver"
   jpa:
     show-sql: false
+security:
+  keys:
+    private_key: "MIICWgIBAAKBgGXp48R79lYGPH00D5Ud2HbsXeXf9AWKA/JAcTpYAk47ut2e5Heo"

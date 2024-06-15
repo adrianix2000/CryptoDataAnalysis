@@ -9,8 +9,9 @@ import pl.adrianix2000.backend.Services.Analysis.NewsFilter;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service

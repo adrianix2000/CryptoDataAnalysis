@@ -1,11 +1,13 @@
 package pl.adrianix2000.backend.Services;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import pl.adrianix2000.backend.Exceptions.ApplicationException;
 import pl.adrianix2000.backend.Models.CustomHttpResponse;
@@ -16,24 +18,22 @@ import pl.adrianix2000.backend.Models.Entities.PostCategory;
 import pl.adrianix2000.backend.Models.Mappers.CryptoPostMapper;
 import pl.adrianix2000.backend.Repositories.CryptoPostRepository;
 
-import javax.swing.text.DateFormatter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CryptoPostService {
-    final String filePath = "/home/rafal/Pulpit/6 semestr/crypto/CryptoDataAnalysis/backend/src/main/resources/Data/Posts/data.tsv";
-    final String xmlFilePath = "/home/rafal/Pobrane/data1.xml";
+    final String filePath = "/home/rafal/Pulpit/6 semestr/crypto/CryptoDataAnalysis/backend/src/main/resources/Data/Posts/data2.tsv";
+    final String xmlFilePath = "/home/rafal/Pulpit/6 semestr/crypto/CryptoDataAnalysis/backend/src/main/resources/Data/Posts/data1.xml";
 
     final CryptoCurrencyService cryptoCurrencyService;
     final CryptoPostRepository repository;
@@ -42,7 +42,7 @@ public class CryptoPostService {
 
     @Transactional
     public void writeAllPostFromFileToDb() {
-        List<CryptoPost> allPosts = readAllPostsFromXML();
+        List<CryptoPost> allPosts = readAllPostsFromFile();
         repository.saveAll(allPosts);
     }
 
